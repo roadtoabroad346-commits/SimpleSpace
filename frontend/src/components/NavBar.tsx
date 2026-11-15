@@ -26,7 +26,7 @@ function NavBar({ curatedTargets, activeTarget, onTargetSelected, onReplayIntro,
             <span className="size-2 rounded-full bg-starlight shadow-[0_0_14px_rgba(255,255,255,.7)]" />
           </span>
           <div>
-            <span className="display-font block text-xl leading-none text-starlight">Skyshift</span>
+            <span className="display-font block text-xl leading-none text-starlight">SimpleSpace</span>
             <span className="micro-label mt-1 block text-moon/40">SPHEREx · 2026</span>
           </div>
         </div>
