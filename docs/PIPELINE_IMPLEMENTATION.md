@@ -49,6 +49,6 @@ A non-match is never proof of novelty. Require multiple epochs, artifact checks,
 
 ## Implemented modules vs remaining work
 
-Implemented: FITS MEF inspection, Level-2 masking, ZODI subtraction, optional solid-angle conversion, SEP background/source extraction, reprojection helpers, SIA2 collection fan-out, cloud_access parsing, channel indexing, and basic epoch-aware catalog matching utilities.
+Implemented: FITS MEF inspection, Level-2 masking, ZODI subtraction, optional solid-angle conversion, SEP background/source extraction, reprojection helpers, SIA2 collection fan-out, cloud_access parsing, allow-listed IRSA cutout URL construction, bounded retrying cutout download, MEF validation, channel indexing, and basic epoch-aware catalog matching utilities.
 
 Remaining: live cutout retrieval with bounded retries/cache, official calibration discovery and version matching, release-aware header validation, calibrated spectral extraction, robust difference imaging, Gaia/WISE TAP adapters and uncertainty propagation, complete provenance ledger, and frontend integration.
