@@ -24,7 +24,7 @@ function AboutPanel({ isOpen, onClose }: AboutPanelProps) {
         <div className="sticky top-0 z-10 mb-5 flex items-center justify-between rounded-xl border border-starlight/10 bg-space-900/80 px-3 py-2 backdrop-blur-xl">
           <div>
             <p className="text-[9px] uppercase tracking-[.2em] text-orbit/55">Mission context</p>
-            <p className="display-font text-lg text-starlight">About Skyshift</p>
+            <p className="display-font text-lg text-starlight">About SimpleSpace</p>
           </div>
           <button type="button" onClick={onClose} className="grid size-8 place-items-center rounded-full border border-starlight/10 text-moon/60 transition hover:bg-starlight/[.06] hover:text-starlight focus-visible:outline-2 focus-visible:outline-orbit" aria-label="Close">
             <svg viewBox="0 0 20 20" className="size-4" aria-hidden="true"><path d="m6 6 8 8M14 6l-8 8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" /></svg>
