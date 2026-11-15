@@ -7,15 +7,19 @@ def aperture_photometry(image,x,y,variance=None,radii=(3.0,4.0,5.0)):
     except ImportError as exc:raise RuntimeError("SEP is required for aperture photometry.") from exc
     data=np.asarray(image,dtype=np.float32).astype(np.dtype("=f4"),copy=True)
     mask=~np.isfinite(data)
-    err=None
-    if variance is not None:
+    if mask.all():return []
+    background=sep.Background(data,mask=mask,bw=64,bh=64,fw=11,fh=11)
+    subtracted=data-background.back()
+    if variance is None:
+        error=np.asarray(background.rms(),dtype=np.float32)
+    else:
         var=np.asarray(variance,dtype=float)
         if var.shape!=data.shape:raise ValueError("Variance map must match image shape.")
-        err=np.sqrt(np.where(np.isfinite(var)&(var>0),var,np.nan)).astype(np.float32)
-        mask |= ~np.isfinite(err)
+        error=np.sqrt(np.where(np.isfinite(var)&(var>0),var,np.nan)).astype(np.float32)
+        mask |= ~np.isfinite(error)
     measurements=[]
     for radius in radii:
-        flux,flux_error,flags=sep.sum_circle(data,np.asarray(x,dtype=float),np.asarray(y,dtype=float),float(radius),err=err,mask=mask,subpix=5)
+        flux,flux_error,flags=sep.sum_circle(subtracted,np.asarray(x,dtype=float),np.asarray(y,dtype=float),float(radius),err=error,mask=mask,subpix=5)
         measurements.append({"radius_px":float(radius),"flux":np.asarray(flux),"flux_error":np.asarray(flux_error),"sep_flags":np.asarray(flags)})
     return measurements
 

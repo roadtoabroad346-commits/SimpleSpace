@@ -17,7 +17,8 @@ def test_spectrum_rejects_l3_bad_pixel_and_fit_error():
  assert len(points)==1 and points[0]["wavelength_um"]==1.
  assert points[0]["ab_magnitude"] is not None
 
-def test_spectrum_rejects_nonphysical_values():
+def test_spectrum_keeps_negative_flux_but_omits_ab_magnitude():
  points=build_spectrum_points([.5,1.,2.],[.01,.01,.01],[-1.,0.,2.],[1.,1.,1.],np.zeros(3,dtype=np.uint64))
  assert len(points)==2
  assert points[0]["ab_magnitude"] is None
+ assert points[1]["ab_magnitude"] is not None
