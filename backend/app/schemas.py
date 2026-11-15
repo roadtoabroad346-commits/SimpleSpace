@@ -12,6 +12,11 @@ class ArchiveSearchRequest(BaseModel):
     def finite_numbers(cls,value:float)->float:
         if value!=value or value in (float("inf"),float("-inf")):raise ValueError("Coordinates must be finite.")
         return value
+class CutoutRequest(BaseModel):
+    access_url:str
+    ra:float=Field(ge=0,lt=360)
+    dec:float=Field(ge=-90,le=90)
+    size_deg:float=Field(default=0.1,ge=0.01,le=0.5)
 class ArchiveObservation(BaseModel):
     ra_deg:float|None=None
     dec_deg:float|None=None

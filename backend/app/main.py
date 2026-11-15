@@ -12,6 +12,8 @@ from app.services.fits import inspect_fits,render_preview_png
 from app.services.archive import search_spherex_sia
 from app.services.processing import process_level2_mef
 from app.services.catalogs import extract_sources
+from app.schemas import CutoutRequest
+from app.services.downloads import CutoutUnavailable,download_cutout
 
 settings=get_settings();MAX_FITS_UPLOAD_BYTES=20*1024*1024
 app=FastAPI(title="SimpleSpace API",version="0.2.0",description="Scientific data access and processing for SPHEREx observations.")
@@ -69,3 +71,20 @@ async def detect_sources_upload(file:UploadFile=File(...)):
         frame=process_level2_mef(await _read_fits(file));sources=await asyncio.to_thread(extract_sources,frame.image)
     except (ValueError,RuntimeError) as exc:raise HTTPException(status_code=422,detail=str(exc)) from exc
     return {"count":len(sources),"detector":frame.detector,"observation_id":frame.observation_id,"mjd_obs":frame.mjd_obs,"unit":frame.image_unit,"threshold_sigma":5.0,"classification":"UNMATCHED_DETECTIONS_NOT_DISCOVERIES","sources":sources}
+
+@app.post("/pipeline/cutout-preview",tags=["pipeline"])
+async def process_live_cutout(request:CutoutRequest):
+    try:
+        payload=await asyncio.to_thread(download_cutout,request.access_url,request.ra,request.dec,request.size_deg)
+        frame=await asyncio.to_thread(process_level2_mef,payload)
+        finite=np.isfinite(frame.image)
+        if not finite.any():raise ValueError("No valid pixels remain after FLAGS masking.")
+        low,high=np.nanpercentile(frame.image,[1,99])
+        scaled=np.zeros(frame.image.shape,dtype=np.uint8) if high<=low else np.asarray(np.clip((frame.image-low)/(high-low),0,1)*255,dtype=np.uint8)
+        scaled[~finite]=0;out=BytesIO();Image.fromarray(scaled).save(out,format="PNG",optimize=True)
+    except CutoutUnavailable as exc:raise HTTPException(status_code=503,detail=str(exc)) from exc
+    except ValueError as exc:raise HTTPException(status_code=422,detail=str(exc)) from exc
+    headers={"X-Science-Unit":frame.image_unit,"X-Processing":"IRSA-cutout; IMAGE-ZODI; strict-Level2-FLAGS-mask","X-Masked-Pixels":str(frame.mask.masked_count),"X-Total-Pixels":str(frame.mask.total_count),"X-Calibrated":"false"}
+    if frame.detector is not None:headers["X-Detector"]=str(frame.detector)
+    if frame.observation_id:headers["X-Observation-ID"]=frame.observation_id
+    return Response(out.getvalue(),media_type="image/png",headers=headers)
