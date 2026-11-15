@@ -31,24 +31,24 @@ def make_mef(flags_shape: tuple[int, int] = (8, 8)) -> bytes:
 
 def test_inspection_finds_extensions_without_assuming_hdu_numbers() -> None:
     result = inspect_fits(make_mef())
-    assert "IMAGE" in result.extensions
-    assert "FLAGS" in result.extensions
-    assert result.flags_present is True
-    assert result.variance_present is True
-    assert result.wavelength_wcs_present is True
-    assert result.sky_wcs_present is True
-    assert result.image_shape == [8, 8]
+    assert "IMAGE" in result["extensions"]
+    assert "FLAGS" in result["extensions"]
+    assert result["flags_present"] is True
+    assert result["variance_present"] is True
+    assert result["wavelength_wcs_present"] is True
+    assert result["sky_wcs_present"] is True
+    assert result["image_shape"] == [8, 8]
 
 
 def test_nonzero_flags_are_preserved_without_assigning_meaning() -> None:
     result = inspect_fits(make_mef())
-    assert result.nonzero_flag_values == [4]
-    assert not any("bad pixel" in warning.lower() for warning in result.warnings)
+    assert result["nonzero_flag_values"] == [4]
+    assert not any("bad pixel" in warning.lower() for warning in result["warnings"])
 
 
 def test_shape_mismatch_is_reported_not_silently_applied() -> None:
     result = inspect_fits(make_mef(flags_shape=(4, 4)))
-    assert any("FLAGS shape does not match IMAGE" in warning for warning in result.warnings)
+    assert any("FLAGS shape does not match IMAGE" in warning for warning in result["warnings"])
 
 
 def test_preview_is_a_png() -> None:
