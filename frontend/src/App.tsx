@@ -10,7 +10,7 @@ const EROS = getTargetById('433-eros-2025-06')!
 const RW_AURIGAE = getTargetById('rw-aurigae-2025-2026')!
 const CURATED_TARGETS = [EROS, BARNARD, RW_AURIGAE]
 
-export const INTRO_SESSION_KEY = 'skyshift:introPlayed'
+export const INTRO_SESSION_KEY = 'simplespace:introPlayed'
 
 interface AppState {
   target: TargetRecord

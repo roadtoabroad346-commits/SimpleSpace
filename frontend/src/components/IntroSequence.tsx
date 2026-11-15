@@ -40,7 +40,7 @@ function IntroSequence({ onComplete }: IntroSequenceProps) {
               <span className="size-1.5 rounded-full bg-starlight" />
             </span>
             <div>
-              <p className="display-font text-lg leading-none">Skyshift</p>
+              <p className="display-font text-lg leading-none">SimpleSpace</p>
               <p className="micro-label mt-1 text-moon/35">A public SPHEREx research tool</p>
             </div>
           </div>

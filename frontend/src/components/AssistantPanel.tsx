@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { askSkyshift } from '../lib/api'
+import { askSimpleSpace } from '../lib/api'
 
 interface AssistantPanelProps {
   targetName: string
@@ -17,7 +17,7 @@ function AssistantPanel({ targetName, channel, onClose }: AssistantPanelProps) {
     event.preventDefault()
     const normalized = question.toLowerCase()
     setIsLoading(true)
-    const backendAnswer = await askSkyshift(question, { targetName, channel })
+    const backendAnswer = await askSimpleSpace(question, { targetName, channel })
     if (backendAnswer) {
       setAnswer(backendAnswer)
       setSource('backend')
@@ -40,7 +40,7 @@ function AssistantPanel({ targetName, channel, onClose }: AssistantPanelProps) {
       <div className="flex items-center justify-between border-b border-starlight/10 px-4 py-3">
         <div>
           <p className="micro-label text-accent-ember">AI research guide</p>
-          <p className="mt-1 text-sm text-starlight">Ask Skyshift</p>
+          <p className="mt-1 text-sm text-starlight">Ask SimpleSpace</p>
         </div>
         <button type="button" onClick={onClose} className="grid size-7 place-items-center rounded-full border border-starlight/10 text-moon/55 hover:text-starlight" aria-label="Close AI assistant">×</button>
       </div>
@@ -48,7 +48,7 @@ function AssistantPanel({ targetName, channel, onClose }: AssistantPanelProps) {
         <p className="text-[10px] leading-relaxed text-moon/50">The guide explains the selected archive results. It does not generate sky pixels or invent measurements.</p>
         {answer && <p className="mt-3 rounded-xl border border-orbit/15 bg-orbit/[.04] px-3 py-2.5 text-xs leading-relaxed text-moon/75"><span className="micro-label mb-2 block text-orbit/60">{source === 'backend' ? 'Connected assistant' : 'Local research guide'}</span>{answer}</p>}
         <form onSubmit={respond} className="mt-3 flex gap-2">
-          <label className="sr-only" htmlFor="assistant-question">Ask Skyshift</label>
+          <label className="sr-only" htmlFor="assistant-question">Ask SimpleSpace</label>
           <input id="assistant-question" value={question} onChange={event => setQuestion(event.target.value)} placeholder="What changed here?" className="min-w-0 flex-1 rounded-xl border border-starlight/10 bg-black/20 px-3 py-2 text-xs text-starlight outline-none placeholder:text-moon/25 focus:border-accent-ember/45" />
           <button type="submit" disabled={isLoading || !question.trim()} className="rounded-xl bg-accent-ember px-3 text-xs font-medium text-space-950 hover:bg-starlight disabled:cursor-wait disabled:opacity-50">{isLoading ? '…' : 'Ask'}</button>
         </form>

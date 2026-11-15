@@ -5,7 +5,7 @@ import targets from './fixtures/targets.json'
 import type { TargetRecord } from './fixtures/types'
 
 const eros = (targets as TargetRecord[])[0]
-const INTRO_SESSION_KEY = 'skyshift:introPlayed'
+const INTRO_SESSION_KEY = 'simplespace:introPlayed'
 
 describe('App', () => {
   it('shows the intro on a fresh session with no deep link, then reveals the app on completion', () => {
