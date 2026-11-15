@@ -9,7 +9,7 @@ export interface ArchiveSearchParams {
 
 // Athena's /search endpoint isn't live yet. Once VITE_API_BASE_URL points
 // at it, this starts returning real archive results instead of null — no
-// other code needs to change. Mirrors askSkyshift's graceful-degrade shape.
+// other code needs to change. Mirrors askSimpleSpace's graceful-degrade shape.
 export async function searchArchive(params: ArchiveSearchParams): Promise<TargetRecord[] | null> {
   const baseUrl = import.meta.env.VITE_API_BASE_URL
   if (!baseUrl) return null
@@ -105,7 +105,7 @@ export async function getGlobalFlags(): Promise<FlagSummaryEntry[] | null> {
   }
 }
 
-export async function askSkyshift(question: string, context: AssistantContext): Promise<string | null> {
+export async function askSimpleSpace(question: string, context: AssistantContext): Promise<string | null> {
   const baseUrl = import.meta.env.VITE_API_BASE_URL
   if (!baseUrl) return null
 
