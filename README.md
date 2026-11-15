@@ -1,35 +1,54 @@
-# 🛰️ SimpleSpace
+# 🛰️ SimpleSpace — Team Palanteer
 
 **Explore how the sky changes across real SPHEREx observations.**
 
-A public-facing research viewer for NASA Space Apps Challenge 2026: *Planet X and SPHEREx*.
+SimpleSpace is Team Palanteer's NASA Space Apps Challenge 2026 project for **Planet X and SPHEREx**. We are building an evidence-first research experience that combines real NASA/IPAC IRSA SPHEREx observations, reproducible FITS processing, spectral context, and multi-epoch candidate review.
 
-> **Implementation status:** the frontend currently includes a curated local demonstration dataset. The backend foundation now provides an IRSA TAP metadata-query endpoint. Browser-ready FITS cutouts, full MEF quality processing, and end-to-end live archive timelines are still in progress. Do not interpret fixture data as live search results.
+> **Current truth about the build:** the research UI still uses curated demonstration sequences. The API now has an IRSA SIA2 collection-search adapter and scientific processing primitives for FITS MEFs: ZODI subtraction, a strict Level-2 FLAGS mask, optional solid-angle conversion, SEP background/source extraction, and reprojection helpers. The complete live SIA2 → cutout → calibrated processing → time-series viewer workflow is not yet finished. Demonstration frames must never be described as live archive results.
 
-## Current capabilities
+## What we are building
 
-- React + TypeScript + Vite research viewer.
-- Curated observation sequences and coordinate-based deep links.
-- Playback controls, field-of-view controls, spectral-channel interface, and source provenance panel.
-- Frontend component and utility tests.
-- FastAPI health endpoint and validated archive-search request.
-- Initial PyVO adapter for IRSA ObsCore metadata.
-- Configurable IRSA endpoint, ObsCore table, and SPHEREx collections.
+- Search current SPHEREx observations by sky coordinates across DR1 and QR3 Wide/Deep collections, with the DR1 All-Sky Cube available as a separate product.
+- Inspect Level-2 MEF extensions by EXTNAME rather than relying on fixed HDU positions.
+- Mask quality-affected pixels before photometry/reprojection, while preserving source flags and provenance.
+- Subtract zodiacal background and apply official per-pixel solid-angle calibration when supplied.
+- Detect sources and compare repeated observations; separate likely artifacts, known objects, variables, and possible movers.
+- Cross-match Gaia DR3, AllWISE, and CatWISE2020 with epoch-aware astrometry.
+- Present the observation epoch, collection/release, detector, wavelength, bandwidth, and archive provenance for each measurement.
 
-## Scientific workflow being implemented
+## Implementation status
 
-1. Search the official IRSA archive by sky coordinates.
-2. Retrieve relevant SPHEREx observations across configured releases.
-3. Download cutouts and inspect FITS MEF extensions by EXTNAME, not hard-coded HDU positions.
-4. Apply release-aware pixel-quality handling using official FLAGS definitions.
-5. Convert validated image planes into browser-ready assets while retaining source-file, epoch, release, detector, and DOI provenance.
-6. Compare observations in time and distinguish motion from variability, artifacts, and insufficient evidence.
-7. Cross-match known sources only with epoch-aware astrometry; a missing catalog match is not proof of discovery.
+| Component | Status |
+|---|---|
+| React + TypeScript + Vite research UI | Implemented; currently fixture-backed |
+| FastAPI backend and health endpoint | Implemented |
+| IRSA TAP metadata adapter | Initial adapter; live schema validation pending |
+| IRSA SIA2 DR1/QR3 fan-out endpoint | Implemented; live archive smoke test pending |
+| FITS MEF inspection by EXTNAME | Implemented |
+| Strict 32-bit Level-2 FLAGS masking | Implemented with tests |
+| ZODI subtraction | Implemented |
+| MJy/sr → μJy/pixel | Implemented when official solid-angle map is supplied |
+| SEP background/source extraction | Implemented as backend utilities/API |
+| Flux and FLAGS reprojection primitives | Implemented |
+| Official CWAVE/CBAND wavelength calibration | Helper implemented; calibration discovery/loading pending |
+| Live cutout download, retries and caching | Not yet complete |
+| Automated SAPM/CWAVE/CBAND/SPECTRAL_CHANNELS retrieval | Not yet complete |
+| End-to-end difference imaging and 1D spectra | Not yet complete |
+| Validated Gaia/WISE catalog TAP matching | Utility foundation only |
+| Candidate evidence ledger and live viewer integration | Not yet complete |
+| Public production deployment | Blueprint prepared; deployment not yet verified |
+
+## Architecture
+
+- **Frontend:** React, TypeScript, Vite, Framer Motion.
+- **API:** FastAPI + Pydantic.
+- **Science:** NumPy, Astropy, Astroquery, PyVO, SEP, Reproject.
+- **Archive:** NASA/IPAC IRSA SIA2/TAP and anonymous AWS Open Data access.
+- **Deployment:** Render Blueprint in `render.yaml` (static frontend + containerized API).
 
 ## Run locally
 
 ### Frontend
-
 ```bash
 cd frontend
 npm ci
@@ -37,42 +56,63 @@ npm run dev
 ```
 
 ### Backend
-
 ```bash
 cd backend
 python -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
-cp .env.example .env
 uvicorn app.main:app --reload --port 8000
 ```
 
-Backend API docs: `http://localhost:8000/docs`. Current metadata endpoint: `POST /archive/observations`.
+API docs: http://localhost:8000/docs
 
-```json
-{"ra": 7.413807, "dec": 9.976979, "radius_deg": 0.1, "limit": 50}
+### Scientific Conda environment
+```bash
+conda env create -f backend/environment.yml
+conda activate spherex_sdt
 ```
 
-## Official data references
+## API endpoints
 
-- [SPHEREx Archive documentation](https://caltech-ipac.github.io/spherex-archive-documentation/)
+- `GET /health`
+- `POST /archive/observations` — initial ObsCore metadata adapter.
+- `POST /archive/spherex` — concurrent SIA2 searches across enabled collections.
+- `POST /archive/inspect-fits` — MEF structure and quality inspection.
+- `POST /archive/preview` — display-only preview (not calibrated).
+- `POST /pipeline/process` — ZODI subtraction and strict Level-2 FLAGS masking.
+- `POST /pipeline/detect` — SEP detections on processed images; output is not a discovery claim.
+
+## Deployment
+
+A Render Blueprint is included. Create a Blueprint from this public repository and select the working branch for a preview. Review the proposed resources and any costs before approving deployment. The API health check is `/health`. The public website is not live until the deployment succeeds and is smoke-tested.
+
+## Official scientific references
+
+- [SPHEREx Archive — Data Releases](https://irsa.ipac.caltech.edu/spherex-archive-documentation/spherex-data-releases/)
+- [SPHEREx Archive — Data Access](https://caltech-ipac.github.io/spherex-archive-documentation/spherex-data-access/)
+- [SPHEREx Archive — Data Products](https://caltech-ipac.github.io/spherex-archive-documentation/spherex-data-products/)
+- [SPHEREx Explanatory Supplement v2.1](https://irsa.ipac.caltech.edu/data/SPHEREx/docs/SPHEREx_Expsupp.pdf)
 - [IRSA SPHEREx tutorials](https://caltech-ipac.github.io/irsa-tutorials/)
-- [IRSA SPHEREx Data Explorer](https://irsa.ipac.caltech.edu/applications/SPHEREx/)
+- [SPHEREx Cutout Service](https://irsa.ipac.caltech.edu/data/SPHEREx/docs/cutout_tool.html)
 
-IRSA notes that SPHEREx data are ingested weekly and SIA2 availability can lag archive ingestion. Release configuration and data freshness must remain explicit.
+The current archive baseline is DR1 + QR3. DR1 contains Survey 1 and 2 data reprocessed with the same improved pipeline/calibrations as QR3; QR3 contains Survey 3 and 4. The DR1 All-Sky Cube is a separate 102-channel product. SIA2 availability may lag archive ingestion by about a day, and new data are ingested weekly.
 
-## Project documentation
+## Team
 
-- `docs/CHALLENGE.md` — challenge interpretation.
-- `docs/JUDGING_CRITERIA.md` — judging criteria.
-- `docs/MVP_CUT_LINE.md` — MVP scope.
-- `docs/DATA_CONTRACT.md` — frontend/data contract.
-- `docs/DATA_RELEASES.md` — release registry notes.
-- `docs/IRSA_DATA_GUIDE.md` — archive and FITS notes.
-- `docs/BACKEND_STATUS.md` — implemented and outstanding backend work.
-- `docs/CREDITS.md` — data and project attribution.
-- `AI_USAGE.md` — AI-use disclosure log.
+**Palanteer** — NASA Space Apps Challenge 2026.
 
-## License and attribution
+## Required SPHEREx acknowledgement
 
-This repository retains the upstream Apache-2.0 license and attribution. See `LICENSE` and `docs/CREDITS.md`. Astronomical measurements and images must come from traceable archive products; generated or fabricated sky data are not acceptable.
+This project uses public data products from SPHEREx, a joint project of the Jet Propulsion Laboratory and the California Institute of Technology, funded by NASA:
+
+> This publication makes use of data products from the Spectro-Photometer for the History of the Universe, Epoch of Reionization and Ices Explorer (SPHEREx), which is a joint project of the Jet Propulsion Laboratory and the California Institute of Technology, and is funded by the National Aeronautics and Space Administration.
+
+Dataset-specific DOI citations and acknowledgements are listed in `docs/CREDITS.md`. Every scientific output must retain its source product, collection, observation epoch, detector, calibration version, and processing history.
+
+## AI-use disclosure
+
+AI-assisted development is disclosed in [AI_USAGE.md](AI_USAGE.md). No astronomical image, measurement, or candidate is AI-generated. All sky data must trace to actual archive products.
+
+## License
+
+The repository retains the upstream Apache-2.0 license and attribution. See [LICENSE](LICENSE) and [docs/CREDITS.md](docs/CREDITS.md).

@@ -1,23 +1,27 @@
 # Backend implementation status
 
-## Implemented in the backend foundation
+## Implemented
+- FastAPI health endpoint and validated coordinate request schema.
+- Configurable IRSA TAP/SIA settings; default collections use DR1 + QR3 and the DR1 cube, not QR2.
+- Initial PyVO ObsCore metadata adapter (live schema compatibility still requires verification).
+- SIA2 collection fan-out endpoint with partial-failure reporting and cloud_access JSON parsing.
+- FITS MEF inspection by EXTNAME.
+- Strict Level-2 32-bit FLAGS masking with SOURCE retained.
+- ZODI subtraction before any optional unit conversion.
+- Optional solid-angle conversion from MJy/sr to microJy/pixel when the official calibration map is supplied.
+- SEP background estimation and source extraction utilities.
+- Exact flux and nearest-neighbour FLAGS reprojection primitives.
+- Separate 64-bit Level-3 photometry flag filtering.
+- 102-channel detector/subchannel index helpers.
+- Render Docker and Blueprint configuration.
 
-- FastAPI application and health endpoint.
-- Validated coordinate/radius/limit request schema.
-- Configurable IRSA TAP endpoint, ObsCore table, collections, timeout-related settings and CORS origins.
-- First metadata-only ObsCore query adapter using PyVO.
-- Explicit scientific boundary: metadata records are not images, motion detections, or discoveries.
-- Basic API validation tests.\n- FITS MEF inspection by EXTNAME, with IMAGE/FLAGS/VARIANCE presence and shape checks.\n- Safe grayscale PNG preview generation from an uploaded FITS file; the preview explicitly does not decode or mask FLAGS.\n- Upload size limit and FITS validation errors.
+## Not yet complete
+1. Live SIA2/TAP validation against current archive and complete cloud_access S3 retrieval.
+2. Safe cutout downloader with retry/backoff, bounded concurrency, checksum validation and cache.
+3. Version-matched SAPM, CWAVE, CBAND and SPECTRAL_CHANNELS calibration retrieval.
+4. Full spectral WCS and channel assignment from official calibration products.
+5. Robust source photometry, 1D spectra, difference imaging and multi-epoch evidence ledger.
+6. Complete Gaia DR3, AllWISE and CatWISE2020 TAP adapters with uncertainty-aware epoch propagation.
+7. End-to-end frontend integration and live deployment smoke tests.
 
-## Not yet implemented (must not be represented as complete)
-
-1. IRSA cutout download, safe caching, and archive URL allow-listing.
-2. Full release-aware MEF validation of IMAGE, FLAGS, VARIANCE, ZODI, PSF and WCS-WAVE; current inspector checks core extensions only.
-3. Pixel-quality masking based on release-specific official FLAGS definitions.
-4. WCS-aware cutout rendering and browser-friendly image serving.
-5. Observation grouping into target timelines and a real sequence endpoint compatible with the frontend.
-6. Gaia/WISE cross-match with proper-motion epoch handling.
-7. Verified motion evidence ledger and provenance checks.
-8. End-to-end deployment and live IRSA smoke tests.
-
-The first backend endpoint is deliberately metadata-only. Do not connect it to the current frontend `/search` contract until image processing and the observation-to-target response mapping are complete.
+No item in the second list should be represented as complete.

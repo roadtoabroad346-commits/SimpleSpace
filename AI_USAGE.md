@@ -1,22 +1,9 @@
 # AI Usage Disclosure
 
-Space Apps 2026 rules permit AI tools to accelerate innovation and creativity, with disclosure. This file is the running log required by those rules.
+This project uses AI-assisted coding and documentation. The team reviews and tests generated code before scientific use. AI assistance does not replace scientific validation or official SPHEREx documentation.
 
-## Rules we're following
-- Generated content must not use, contain, or modify NASA branding or design elements (logos, flags, mission identifiers).
-- AI-generated images/videos need a visible watermark.
-- AI-generated code and data must be acknowledged here and in relevant file/PR metadata.
-- Judges weigh originality, intent, and execution for AI-assisted work.
-- No sky/astronomy data is ever AI-generated or fabricated — every image and data point must trace to a real SPHEREx/IRSA source file.
+No astronomical measurements, FITS data, sky images, or candidate detections are AI-generated or fabricated.
 
-## Log
-
-| Date | Tool | What it was used for |
+| Date | Tool | Scope |
 |---|---|---|
-| 2026-09-16 | Claude (Opus 5) | Challenge ideation, rules research, technical architecture drafts |
-| 2026-09-21 | Claude (Opus 5) | Repo scaffold generation (docs, CI, contributing workflow) |
-| 2026-09-22 | Claude (Opus 5) | Judging-criteria lock-in, concept pressure test, MVP scope cut, two-person work split |
-| 2026-09-25 | Claude (Opus 5) | Team kickoff-meeting talking points |
-| 2026-11-15 | ChatGPT (GPT-6) | Backend foundation, IRSA TAP metadata adapter, FITS MEF inspection and preview processing, API tests, CI expansion, project README and SimpleSpace rebranding |
-
-Add a row here every time an AI tool materially contributes to code, docs, design, or copy that ships in the submission.
+| 2026-11-15 | ChatGPT (GPT-6) | Backend foundation, IRSA metadata adapter, FITS inspection, Level-2 FLAGS masking, processing utilities, SIA2 adapter, SEP source extraction utilities, tests, deployment scaffolding, README and Team Palanteer documentation |

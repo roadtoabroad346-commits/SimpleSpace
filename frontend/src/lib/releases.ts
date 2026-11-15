@@ -1,7 +1,3 @@
-// New SPHEREx releases ship weekly. Adding one here is the only change
-// needed — SourcePanel and AboutSection both render from this list, so a
-// new release's DOI appears on the About page automatically instead of
-// depending on someone remembering to update hand-written citation text.
 export interface ReleaseConfig {
   id: string
   label: string
@@ -12,14 +8,9 @@ export interface ReleaseConfig {
 }
 
 export const RELEASES: ReleaseConfig[] = [
-  {
-    id: 'qr2',
-    label: 'Quick Release 2',
-    doi: '10.26131/IRSA652',
-    starts: '2025-04-24',
-    ends: '2026-07-20',
-    enabled: true,
-  },
+  { id: 'dr1', label: 'Data Release 1', doi: '10.26131/IRSA678', starts: '2025-05-01', ends: null, enabled: true },
+  { id: 'qr3', label: 'Quick Release 3', doi: '10.26131/IRSA662', starts: '2026-05-16', ends: null, enabled: true },
+  { id: 'dr1-cube', label: 'DR1 All-Sky Cube', doi: '10.26131/IRSA679', starts: '2025-05-01', ends: null, enabled: false },
 ]
 
 export function releaseForDoi(doi: string): ReleaseConfig | undefined {
