@@ -6,4 +6,4 @@ No astronomical measurements, FITS data, sky images, or candidate detections are
 
 | Date | Tool | Scope |
 |---|---|---|
-| 2026-11-15 | ChatGPT (GPT-6) | Backend foundation, IRSA metadata adapter, FITS inspection, Level-2 FLAGS masking, processing utilities, SIA2 adapter, SEP source extraction utilities, tests, deployment scaffolding, README and Team Palanteer documentation |
+| 2026-11-15 | ChatGPT (GPT-6) | Backend foundation, IRSA metadata adapter, FITS inspection, Level-2 FLAGS masking, processing utilities, SIA2 adapter, safe cutout downloader, SEP source extraction utilities, tests, deployment scaffolding, README and Team Palanteer documentation |
