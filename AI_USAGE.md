@@ -17,5 +17,6 @@ Space Apps 2026 rules permit AI tools to accelerate innovation and creativity, w
 | 2026-09-21 | Claude (Opus 5) | Repo scaffold generation (docs, CI, contributing workflow) |
 | 2026-09-22 | Claude (Opus 5) | Judging-criteria lock-in, concept pressure test, MVP scope cut, two-person work split |
 | 2026-09-25 | Claude (Opus 5) | Team kickoff-meeting talking points |
+| 2026-11-15 | ChatGPT (GPT-6) | Backend foundation, IRSA TAP metadata adapter, API validation tests, CI expansion, project README and SimpleSpace rebranding |
 
 Add a row here every time an AI tool materially contributes to code, docs, design, or copy that ships in the submission.
