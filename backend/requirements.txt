@@ -5,3 +5,5 @@ pyvo>=1.6,<2
 astropy>=6.1,<8
 pydantic-settings>=2.5,<3
 pytest>=8,<9
+pillow>=10,<13
+python-multipart>=0.0.9,<1
