@@ -1,0 +1,21 @@
+name: spherex_sdt
+channels: [conda-forge]
+dependencies:
+  - python>=3.10,<3.13
+  - numpy
+  - astropy
+  - astroquery
+  - pyvo
+  - reproject
+  - sep
+  - s3fs
+  - pyarrow
+  - hpgeom
+  - bokeh
+  - matplotlib
+  - pillow
+  - fastapi
+  - uvicorn
+  - python-multipart
+  - httpx
+  - pytest
