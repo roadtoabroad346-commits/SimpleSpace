@@ -6,6 +6,7 @@ from typing import Any
 
 import pyvo
 from astropy.table import Table
+from numpy.ma import is_masked
 
 from app.config import Settings
 from app.schemas import ArchiveObservation, ArchiveSearchRequest
@@ -17,7 +18,7 @@ class ArchiveUnavailable(RuntimeError):
 
 def _as_optional_float(value: Any) -> float | None:
     try:
-        if value is None:
+        if value is None or is_masked(value):
             return None
         number = float(value)
         return number if math.isfinite(number) else None
@@ -26,7 +27,7 @@ def _as_optional_float(value: Any) -> float | None:
 
 
 def _as_optional_str(value: Any) -> str | None:
-    if value is None:
+    if value is None or is_masked(value):
         return None
     text = str(value).strip()
     return text or None
@@ -83,4 +84,10 @@ def _query_irsa(settings: Settings, request: ArchiveSearchRequest) -> list[Archi
 async def search_observations(
     settings: Settings, request: ArchiveSearchRequest
 ) -> list[ArchiveObservation]:
-    return await asyncio.to_thread(_query_irsa, settings, request)
+    try:
+        return await asyncio.wait_for(
+            asyncio.to_thread(_query_irsa, settings, request),
+            timeout=settings.irsa_query_timeout_seconds,
+        )
+    except TimeoutError as exc:
+        raise ArchiveUnavailable("IRSA TAP query exceeded the configured time limit.") from exc
