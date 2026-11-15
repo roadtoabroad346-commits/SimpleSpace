@@ -17,6 +17,13 @@ class CutoutRequest(BaseModel):
     ra:float=Field(ge=0,lt=360)
     dec:float=Field(ge=-90,le=90)
     size_deg:float=Field(default=0.1,ge=0.01,le=0.5)
+class CatalogCrossmatchRequest(BaseModel):
+    ra:float=Field(ge=0,lt=360)
+    dec:float=Field(ge=-90,le=90)
+    radius_deg:float=Field(default=0.01,gt=0,le=1.0)
+    epoch_mjd:float|None=None
+    snr:float=0.0
+    motion_significance:float|None=None
 class ArchiveObservation(BaseModel):
     ra_deg:float|None=None
     dec_deg:float|None=None

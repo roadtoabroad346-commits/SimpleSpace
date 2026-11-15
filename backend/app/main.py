@@ -11,8 +11,9 @@ from app.services.irsa import ArchiveUnavailable,search_observations
 from app.services.fits import inspect_fits,render_preview_png
 from app.services.archive import search_spherex_sia
 from app.services.processing import process_level2_mef
-from app.services.catalogs import extract_sources
-from app.schemas import CutoutRequest
+from app.services.catalogs import extract_sources,match_catalog,classify_candidate
+from app.services.catalog_query import query_catalogs
+from app.schemas import CutoutRequest,CatalogCrossmatchRequest
 from app.services.downloads import CutoutUnavailable,download_cutout
 
 settings=get_settings();MAX_FITS_UPLOAD_BYTES=20*1024*1024
@@ -88,3 +89,22 @@ async def process_live_cutout(request:CutoutRequest):
     if frame.detector is not None:headers["X-Detector"]=str(frame.detector)
     if frame.observation_id:headers["X-Observation-ID"]=frame.observation_id
     return Response(out.getvalue(),media_type="image/png",headers=headers)
+
+@app.post("/catalogs/crossmatch",tags=["catalogs"])
+async def crossmatch_catalogs(request:CatalogCrossmatchRequest):
+    try:
+        tables,failures=await asyncio.wait_for(asyncio.to_thread(query_catalogs,settings.irsa_tap_url,request.ra,request.dec,request.radius_deg),timeout=settings.irsa_query_timeout_seconds)
+    except TimeoutError as exc:raise HTTPException(status_code=504,detail="Catalog TAP queries timed out.") from exc
+    except ValueError as exc:raise HTTPException(status_code=422,detail=str(exc)) from exc
+    matches={}
+    epochs={"gaia":2016.0,"allwise":2010.5,"catwise":2010.5}
+    for name in ("gaia","allwise","catwise"):
+        table=tables.get(name)
+        if table is None:continue
+        try:
+            matches[name]=match_catalog(request.ra,request.dec,table,name,radius_arcsec=2.0,epoch_mjd=request.epoch_mjd,catalog_epoch_jyear=epochs[name]).__dict__
+        except Exception as exc:failures.append({"catalog":name,"error":type(exc).__name__})
+    if not matches and failures:raise HTTPException(status_code=503,detail={"message":"No catalog query succeeded.","failures":failures})
+    empty=type("NoMatch",(),{"matched":False})()
+    classification=classify_candidate(request.snr,matches.get("gaia",empty),matches.get("allwise",empty),matches.get("catwise",empty),request.motion_significance)
+    return {"classification":classification,"matches":matches,"partial":bool(failures),"failures":failures,"note":"A missing catalog match is not proof of a new discovery."}
