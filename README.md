@@ -1,8 +1,8 @@
-# SimpleSpace — Team Palanteer
+# Simple Space — Team Palanteer
 
 **Explore how the sky changes across real SPHEREx observations.**
 
-SimpleSpace is a NASA Space Apps Challenge 2026 project by **Team Palanteer**. It is a research-oriented prototype for exploring repeated observations from **SPHEREx** and organizing the evidence needed to review unusual or changing sources.
+Simple Space is a NASA Space Apps Challenge 2026 project by **Team Palanteer**. It is a research-oriented prototype for exploring repeated observations from **SPHEREx** and organizing the evidence needed to review unusual or changing sources.
 
 Our goal is to make the path from archive data to a reviewable scientific candidate clearer and more reproducible: discover observations, inspect the FITS products, apply documented quality handling, compare epochs, and check known-source catalogues.
 
@@ -31,7 +31,7 @@ SPHEREx observes the sky in many infrared spectral channels. Repeated observatio
 
 A useful candidate-review workflow must do more than display a bright pixel. It should preserve the source observation and release, account for data-quality flags, document processing choices, compare observations at their actual epochs, and check whether known catalogued objects can explain the signal.
 
-SimpleSpace is designed around that evidence-first approach. It is a prototype and research aid, not an automated discovery authority.
+Simple Space is designed around that evidence-first approach. It is a prototype and research aid, not an automated discovery authority.
 
 ## Intended workflow
 
