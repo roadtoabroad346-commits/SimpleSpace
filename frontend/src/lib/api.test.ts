@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, afterEach } from 'vitest'
-import { getTargetById, searchTargets, findTargetByCoordinates, searchArchive, submitFlag, getGlobalFlags, askSkyshift } from './api'
+import { getTargetById, searchTargets, findTargetByCoordinates, searchArchive, submitFlag, getGlobalFlags, askSimpleSpace } from './api'
 
 describe('api (fixture-backed)', () => {
   it('getTargetById returns the matching record', () => {
@@ -64,12 +64,12 @@ describe('searchArchive (backend, optional)', () => {
   })
 
   it('preserves a path prefix in the configured base URL, like its sibling endpoints do', async () => {
-    vi.stubEnv('VITE_API_BASE_URL', 'https://api.skyshift.app/v1')
+    vi.stubEnv('VITE_API_BASE_URL', 'https://api.simplespace.app/v1')
     const fetchSpy = vi.fn().mockResolvedValue({ ok: true, json: async () => [] })
     vi.stubGlobal('fetch', fetchSpy)
     await searchArchive({ query: 'Eros' })
     const calledUrl = fetchSpy.mock.calls[0][0].toString()
-    expect(calledUrl.startsWith('https://api.skyshift.app/v1/search')).toBe(true)
+    expect(calledUrl.startsWith('https://api.simplespace.app/v1/search')).toBe(true)
   })
 
   it('drops a remote record with no observations instead of handing the app something that will crash the viewer', async () => {
@@ -150,7 +150,7 @@ describe('getGlobalFlags (backend, optional)', () => {
   })
 })
 
-describe('askSkyshift (backend, optional)', () => {
+describe('askSimpleSpace (backend, optional)', () => {
   afterEach(() => {
     vi.unstubAllEnvs()
     vi.unstubAllGlobals()
@@ -162,7 +162,7 @@ describe('askSkyshift (backend, optional)', () => {
     vi.stubEnv('VITE_API_BASE_URL', '')
     const fetchSpy = vi.fn()
     vi.stubGlobal('fetch', fetchSpy)
-    const result = await askSkyshift('What moved?', context)
+    const result = await askSimpleSpace('What moved?', context)
     expect(result).toBeNull()
     expect(fetchSpy).not.toHaveBeenCalled()
   })
@@ -170,28 +170,28 @@ describe('askSkyshift (backend, optional)', () => {
   it('returns the real answer when the backend responds with one', async () => {
     vi.stubEnv('VITE_API_BASE_URL', 'http://localhost:8000')
     vi.stubGlobal('fetch', vi.fn().mockResolvedValue({ ok: true, json: async () => ({ answer: 'It drifted 604 arcsec.' }) }))
-    const result = await askSkyshift('What moved?', context)
+    const result = await askSimpleSpace('What moved?', context)
     expect(result).toBe('It drifted 604 arcsec.')
   })
 
   it('returns null instead of a fabricated answer when the backend response has no answer text', async () => {
     vi.stubEnv('VITE_API_BASE_URL', 'http://localhost:8000')
     vi.stubGlobal('fetch', vi.fn().mockResolvedValue({ ok: true, json: async () => ({ answer: '  ' }) }))
-    const result = await askSkyshift('What moved?', context)
+    const result = await askSimpleSpace('What moved?', context)
     expect(result).toBeNull()
   })
 
   it('returns null, not a throw, when the backend is unreachable', async () => {
     vi.stubEnv('VITE_API_BASE_URL', 'http://localhost:8000')
     vi.stubGlobal('fetch', vi.fn().mockRejectedValue(new Error('network down')))
-    const result = await askSkyshift('What moved?', context)
+    const result = await askSimpleSpace('What moved?', context)
     expect(result).toBeNull()
   })
 
   it('returns null when the backend responds but not ok', async () => {
     vi.stubEnv('VITE_API_BASE_URL', 'http://localhost:8000')
     vi.stubGlobal('fetch', vi.fn().mockResolvedValue({ ok: false }))
-    const result = await askSkyshift('What moved?', context)
+    const result = await askSimpleSpace('What moved?', context)
     expect(result).toBeNull()
   })
 })
