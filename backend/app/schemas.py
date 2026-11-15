@@ -38,3 +38,15 @@ class ArchiveSearchResponse(BaseModel):
     count: int
     observations: list[ArchiveObservation]
     note: str
+
+
+class FITSInspectionResponse(BaseModel):
+    extensions: list[str]
+    image_shape: list[int]
+    flags_present: bool
+    variance_present: bool
+    wavelength_wcs_present: bool
+    sky_wcs_present: bool
+    finite_pixel_fraction: float
+    nonzero_flag_values: list[int]
+    warnings: list[str]
