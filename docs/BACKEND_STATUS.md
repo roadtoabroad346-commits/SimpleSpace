@@ -7,12 +7,12 @@
 - Configurable IRSA TAP endpoint, ObsCore table, collections, timeout-related settings and CORS origins.
 - First metadata-only ObsCore query adapter using PyVO.
 - Explicit scientific boundary: metadata records are not images, motion detections, or discoveries.
-- Basic API validation tests.
+- Basic API validation tests.\n- FITS MEF inspection by EXTNAME, with IMAGE/FLAGS/VARIANCE presence and shape checks.\n- Safe grayscale PNG preview generation from an uploaded FITS file; the preview explicitly does not decode or mask FLAGS.\n- Upload size limit and FITS validation errors.
 
 ## Not yet implemented (must not be represented as complete)
 
-1. FITS cutout download and safe caching.
-2. MEF HDU discovery by EXTNAME and validation of IMAGE, FLAGS, VARIANCE, ZODI, PSF and WCS-WAVE.
+1. IRSA cutout download, safe caching, and archive URL allow-listing.
+2. Full release-aware MEF validation of IMAGE, FLAGS, VARIANCE, ZODI, PSF and WCS-WAVE; current inspector checks core extensions only.
 3. Pixel-quality masking based on release-specific official FLAGS definitions.
 4. WCS-aware cutout rendering and browser-friendly image serving.
 5. Observation grouping into target timelines and a real sequence endpoint compatible with the frontend.
