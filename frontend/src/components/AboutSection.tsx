@@ -6,7 +6,7 @@ function AboutSection() {
       <p className="micro-label text-accent-ember/70">A note on what you're seeing · a public research bay</p>
       <h2 className="display-font mt-3 text-4xl leading-none text-starlight">Turn the archive into a hunt.</h2>
       <p className="mt-5 leading-relaxed">
-        SPHEREx maps the entire sky in 102 near-infrared bands. Skyshift puts the research loop in one place:
+        SPHEREx maps the entire sky in 102 near-infrared bands. SimpleSpace puts the research loop in one place:
         choose coordinates, watch the real observation sequence, move through wavelength, and compare what changed.
       </p>
 
