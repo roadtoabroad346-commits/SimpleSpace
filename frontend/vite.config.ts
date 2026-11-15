@@ -2,10 +2,10 @@ import tailwindcss from '@tailwindcss/vite'
 import react from '@vitejs/plugin-react'
 import { defineConfig } from 'vitest/config'
 
-// GitHub Pages serves this project below /SimpleSpace/.
-// VITE_BASE_PATH can override the path for other hosting providers.
+// Set VITE_BASE_PATH=/SimpleSpace/ for GitHub Pages.
+// Keep / as the default so root-hosted deployments (for example Render) work.
 export default defineConfig({
-  base: process.env.VITE_BASE_PATH || '/SimpleSpace/',
+  base: process.env.VITE_BASE_PATH || '/',
   plugins: [react(), tailwindcss()],
   test: {
     environment: 'jsdom',
