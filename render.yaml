@@ -11,13 +11,24 @@ services:
       - key: APP_ENV
         value: production
       - key: SPHEREX_COLLECTIONS
-        value: spherex_dr1,spherex_qr3,spherex_dr1_deep,spherex_qr3_deep
+        value: spherex_dr1,spherex_qr3,spherex_dr1_deep,spherex_qr3_deep,spherex_dr1_cube
+      - key: CORS_ORIGINS
+        fromService:
+          name: simplespace-web
+          type: web
+          envVarKey: RENDER_EXTERNAL_URL
   - type: web
     name: simplespace-web
     runtime: static
     rootDir: frontend
     buildCommand: npm ci && npm run build
     staticPublishPath: ./dist
+    envVars:
+      - key: VITE_API_BASE_URL
+        fromService:
+          name: simplespace-api
+          type: web
+          envVarKey: RENDER_EXTERNAL_URL
     routes:
       - type: rewrite
         source: /*
