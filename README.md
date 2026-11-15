@@ -4,7 +4,7 @@
 
 SimpleSpace is Team Palanteer's NASA Space Apps Challenge 2026 project for **Planet X and SPHEREx**. We are building an evidence-first research experience that combines real NASA/IPAC IRSA SPHEREx observations, reproducible FITS processing, spectral context, and multi-epoch candidate review.
 
-> **Current truth about the build:** the research UI still uses curated demonstration sequences. The API now has an IRSA SIA2 collection-search adapter and scientific processing primitives for FITS MEFs: ZODI subtraction, a strict Level-2 FLAGS mask, optional solid-angle conversion, SEP background/source extraction, and reprojection helpers. The complete live SIA2 → cutout → calibrated processing → time-series viewer workflow is not yet finished. Demonstration frames must never be described as live archive results.
+> **Current truth about the build:** the research UI still uses curated demonstration sequences. The API now has an IRSA SIA2 collection-search adapter and scientific processing primitives for FITS MEFs: ZODI subtraction, a strict Level-2 FLAGS mask, optional solid-angle conversion, SEP background/source extraction, and reprojection helpers. The live SIA2 search and IRSA cutout-preview API now exist, but calibration discovery, multi-epoch science products and frontend timeline integration are not yet finished. Demonstration frames must never be described as live archive results.
 
 ## What we are building
 
@@ -79,7 +79,7 @@ conda activate spherex_sdt
 - `POST /archive/spherex` — concurrent SIA2 searches across enabled collections.
 - `POST /archive/inspect-fits` — MEF structure and quality inspection.
 - `POST /archive/preview` — display-only preview (not calibrated).
-- `POST /pipeline/process` — ZODI subtraction and strict Level-2 FLAGS masking.
+- `POST /pipeline/process` — uploaded FITS preprocessing with ZODI subtraction and strict Level-2 FLAGS masking.\n- `POST /pipeline/cutout-preview` — fetch an IRSA cutout with bounded retries, validate the MEF, process it and return a display preview.
 - `POST /pipeline/detect` — SEP detections on processed images; output is not a discovery claim.
 
 ## Deployment
